@@ -1,24 +1,26 @@
 package br.edu.ifs.rss_g1.notices_g1.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
-
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
+
 @Entity
 @Data
 public class Category {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID category_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long category_id;
+
+    @NotNull(message = "name cannot be null")
     private String name;
+
+    @NotNull(message = "name cannot be null")
     private String link;
+
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
 }
