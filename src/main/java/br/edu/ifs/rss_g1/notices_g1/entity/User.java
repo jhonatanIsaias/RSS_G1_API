@@ -1,47 +1,55 @@
 package br.edu.ifs.rss_g1.notices_g1.entity;
 
+import br.edu.ifs.rss_g1.notices_g1.enums.RoleEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.util.*;
 
 @Entity
 @Data
-public class User {
+public class User implements  UserDetails {
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+
     private UUID user_id;
 
-    @NotNull(message = "Name cannot not be null")
-    @Size(min = 8,max = 100, message = "Name must be between 1 and 100 characters")
+
     private String name;
 
-    @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Invalid phone number")
+
     private String fone;
 
-    @NotNull(message = "Name cannot not be null")
+
     private String login;
 
-    @Email(message = "T+his is a invalid email")
+    @Getter
     private String email;
 
-    @NotNull(message = "Password cannot be null")
-    @Size(min = 8, message = "Password must be at least 8 characters")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$",
-            message = "Password must contain at least one digit, one lowercase letter, one uppercase letter, and one special character (@#$%^&+=)")
+    private int role;
+
+    @Getter
     private String password;
 
-    @NotNull(message = "Birth date cannot be null")
+
+    @Temporal(TemporalType.DATE)
     private Date birth_date;
 
     @NotNull(message = "Status cannot be null")
-    private String status;
+    private Boolean status;
 
-    @Null
+    @Temporal(TemporalType.DATE)
     private Date created_at;
     @ManyToMany
     @JoinTable(
@@ -49,5 +57,47 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
+    @Setter
     private Set<Category> categories = new HashSet<>();
+
+
+    public RoleEnum getRole() {
+        return RoleEnum.valueOf(role);
+    }
+
+    public void setRole(RoleEnum role) {
+        if (role != null) {
+            this.role = role.getCode();
+        }
+    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.getRole() == RoleEnum.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
