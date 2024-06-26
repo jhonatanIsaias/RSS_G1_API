@@ -2,7 +2,9 @@ package br.edu.ifs.rss_g1.notices_g1.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
@@ -10,6 +12,8 @@ import java.util.UUID;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Notice {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -20,6 +24,7 @@ public class Notice {
     private String title;
 
     @NotNull(message = "Description cannot be null")
+    @Column(length = 10000)
     private String description;
 
     @NotNull(message = "Url image cannot be null")

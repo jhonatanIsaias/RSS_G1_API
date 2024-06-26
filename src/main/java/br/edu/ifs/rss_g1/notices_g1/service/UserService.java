@@ -7,6 +7,7 @@ import br.edu.ifs.rss_g1.notices_g1.enums.RoleEnum;
 import br.edu.ifs.rss_g1.notices_g1.repository.CategoryRepository;
 import br.edu.ifs.rss_g1.notices_g1.repository.UserRepository;
 import br.edu.ifs.rss_g1.notices_g1.service.Exceptions.UserException;
+import br.edu.ifs.rss_g1.notices_g1.utils.ParseDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.expression.ParseException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,21 +48,13 @@ public class UserService {
         user.setStatus(true);
         String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.getPassword());
         user.setPassword(encryptedPassword);
-        user.setBirth_date(parseDate(userDTO.getBirth_date()));
+        user.setBirth_date(ParseDate.parseDate(userDTO.getBirth_date(),DATE_FORMAT));
         user.setCreated_at(new Date());
         setCategoriesUser(userDTO,user);
         return user;
 
     }
-    private Date parseDate(String date) {
-        try {
-            return DATE_FORMAT.parse(date);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException(e);
-        } catch (java.text.ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
     private void setCategoriesUser(UserDTO userDTO, User user){
         if(!userDTO.getCategories().isEmpty()){

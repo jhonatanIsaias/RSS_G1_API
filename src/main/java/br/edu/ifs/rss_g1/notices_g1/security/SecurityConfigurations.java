@@ -32,6 +32,7 @@ public class SecurityConfigurations {
                         authorize
                                 .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/user").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/notice").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/category").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
