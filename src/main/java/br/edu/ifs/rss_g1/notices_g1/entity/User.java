@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +21,8 @@ import java.util.*;
 public class User implements  UserDetails {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-
-    private UUID user_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
 
 
     private String name;
@@ -51,14 +50,14 @@ public class User implements  UserDetails {
 
     @Temporal(TemporalType.DATE)
     private Date created_at;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_category",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     @Setter
-    private Set<Category> categories = new HashSet<>();
+    private List<Category> categories = new ArrayList<>();
 
 
     public RoleEnum getRole() {

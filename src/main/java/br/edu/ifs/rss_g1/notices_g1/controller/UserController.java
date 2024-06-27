@@ -3,25 +3,29 @@ package br.edu.ifs.rss_g1.notices_g1.controller;
 import br.edu.ifs.rss_g1.notices_g1.dto.UserDTO;
 import br.edu.ifs.rss_g1.notices_g1.dto.UserResponseDTO;
 import br.edu.ifs.rss_g1.notices_g1.entity.User;
+import br.edu.ifs.rss_g1.notices_g1.repository.UserRepository;
 import br.edu.ifs.rss_g1.notices_g1.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @RestController
 @RequestMapping(value = "/user")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
+
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserDTO user) {
          User userCreate =  userService.saveUser(user);
          UserResponseDTO userResponseDTO = new UserResponseDTO(
+                 userCreate.getUserId(),
                  userCreate.getName(),
                  userCreate.getFone(),
                  userCreate.getLogin(),
@@ -33,5 +37,9 @@ public class UserController {
                  userCreate.getCategories());
          return ResponseEntity.ok().body(userResponseDTO);
     }
+
+
+
+
 
 }

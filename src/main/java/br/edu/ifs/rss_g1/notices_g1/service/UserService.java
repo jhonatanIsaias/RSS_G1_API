@@ -2,9 +2,11 @@ package br.edu.ifs.rss_g1.notices_g1.service;
 
 import br.edu.ifs.rss_g1.notices_g1.dto.UserDTO;
 import br.edu.ifs.rss_g1.notices_g1.entity.Category;
+import br.edu.ifs.rss_g1.notices_g1.entity.Notice;
 import br.edu.ifs.rss_g1.notices_g1.entity.User;
 import br.edu.ifs.rss_g1.notices_g1.enums.RoleEnum;
 import br.edu.ifs.rss_g1.notices_g1.repository.CategoryRepository;
+import br.edu.ifs.rss_g1.notices_g1.repository.NoticeRepository;
 import br.edu.ifs.rss_g1.notices_g1.repository.UserRepository;
 import br.edu.ifs.rss_g1.notices_g1.service.Exceptions.UserException;
 import br.edu.ifs.rss_g1.notices_g1.utils.ParseDate;
@@ -15,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 
 @Service
@@ -35,9 +37,10 @@ public class UserService {
           throw new RuntimeException();
         }
         catch (RuntimeException e){
-           throw new UserException("already registered user");
+           throw new UserException(e.getMessage());
         }
     }
+
     private User userDtoToUser(UserDTO userDTO){
         User user =  new User();
         user.setName(userDTO.getName());

@@ -31,7 +31,8 @@ public class Notice {
     private String url_image;
 
     @NotNull(message = "Publication date cannot be null")
-    private Date pub_date;
+    @Column(name = "pub_date")
+    private Date pubDate;
 
     @ManyToOne
     @JoinColumn(name = "category_fk")

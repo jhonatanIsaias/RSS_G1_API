@@ -2,48 +2,57 @@ package br.edu.ifs.rss_g1.notices_g1.service;
 
 import br.edu.ifs.rss_g1.notices_g1.entity.Category;
 import br.edu.ifs.rss_g1.notices_g1.entity.Notice;
+import br.edu.ifs.rss_g1.notices_g1.entity.User;
 import br.edu.ifs.rss_g1.notices_g1.repository.CategoryRepository;
 import br.edu.ifs.rss_g1.notices_g1.repository.NoticeRepository;
+import br.edu.ifs.rss_g1.notices_g1.repository.UserRepository;
 import br.edu.ifs.rss_g1.notices_g1.utils.ParseDate;
 import com.rometools.modules.mediarss.MediaEntryModule;
 import com.rometools.modules.mediarss.MediaModule;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.io.FeedException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@EnableAsync
 public class NoticeService {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
 
 
     private final NoticeRepository noticeRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
     private final RssFeedService rssFeedService;
 
-    public void save(){
+    @Async
+    @Scheduled(fixedDelay = 3600000)
+    protected void save(){
 
         List<Category> categories = categoryRepository.findAll();
         try{
             for(Category c : categories){
                 List<SyndEntry> notices = rssFeedService.readFeed(c.getLink());
                 for(SyndEntry n : notices){
-                    MediaEntryModule mediaModule = (MediaEntryModule) n.getModule(MediaModule.URI);
-                    Notice noticeCreated = new Notice(null,
-                            n.getTitle(),
-                            n.getDescription().getValue(),
-                            getLinkImage(mediaModule),
-                            ParseDate.parseDate(n.getPublishedDate().toString(),DATE_FORMAT),
-                            c);
-                     noticeRepository.save(noticeCreated);
+                    Date date =  ParseDate.parseDate(n.getPublishedDate().toString(), DATE_FORMAT);
+                    if(noticeRepository.findByTitleAndPubDate(n.getTitle(),date).isEmpty()) {
+                        MediaEntryModule mediaModule = (MediaEntryModule) n.getModule(MediaModule.URI);
+
+                        Notice noticeCreated = new Notice(null,
+                                n.getTitle(),
+                                n.getDescription().getValue(),
+                                getLinkImage(mediaModule),
+                                date,
+                                c);
+                        noticeRepository.save(noticeCreated);
+                    }
                 }
 
             }
@@ -51,9 +60,23 @@ public class NoticeService {
             throw new RuntimeException(e);
         }
     }
+  @Transactional
+    public List<Notice> handlerNoticesByCategory(Long userId){
+      User optionalUser = userRepository.findById(userId).orElse(null);
 
-    public List<Notice> findAllByCategory(Category category){
-        return noticeRepository.findAllByCategory(category);
+            if(optionalUser != null){
+                System.out.println(optionalUser.getCategories());
+            List<Category> categories = optionalUser.getCategories();
+            List<Notice> notices = new ArrayList<>();
+
+            for(Category c: categories){
+                List<Notice> noticesCategory = noticeRepository.findAllByCategory(c);
+                notices.addAll(noticesCategory);
+            }
+            return notices;
+        }
+
+        return null;
     }
 
     public String getLinkImage(MediaEntryModule mediaModule){

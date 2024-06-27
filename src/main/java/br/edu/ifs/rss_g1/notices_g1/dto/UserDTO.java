@@ -45,7 +45,7 @@ public class UserDTO  {
 
     private String created_at;
 
-    private Set<Long> categories = new HashSet<>();
+    private List<Long> categories = new ArrayList<>();
 
 
 

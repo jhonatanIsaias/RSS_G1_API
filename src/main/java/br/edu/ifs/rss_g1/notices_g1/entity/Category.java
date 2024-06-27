@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,7 +22,7 @@ public class Category {
     @NotNull(message = "name cannot be null")
     private String link;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany
     @JsonIgnore
-    private Set<User> users = new HashSet<>();
+    private List<User> users;
 }
