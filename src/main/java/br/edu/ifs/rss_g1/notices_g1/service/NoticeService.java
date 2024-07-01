@@ -67,7 +67,8 @@ public class NoticeService {
             if(optionalUser != null){
 
             List<Category> categories = optionalUser.getCategories();
-            if(categories == null ){
+                System.out.println(categories);
+            if(categories.isEmpty()){
                 return noticeRepository.findAll();
             }
             List<Notice> notices = new ArrayList<>();
