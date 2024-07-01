@@ -60,13 +60,16 @@ public class NoticeService {
             throw new RuntimeException(e);
         }
     }
-  @Transactional
+    @Transactional
     public List<Notice> handlerNoticesByCategory(Long userId){
       User optionalUser = userRepository.findById(userId).orElse(null);
 
             if(optionalUser != null){
-                System.out.println(optionalUser.getCategories());
+
             List<Category> categories = optionalUser.getCategories();
+            if(categories == null ){
+                return noticeRepository.findAll();
+            }
             List<Notice> notices = new ArrayList<>();
 
             for(Category c: categories){
@@ -76,7 +79,7 @@ public class NoticeService {
             return notices;
         }
 
-        return null;
+         return null;
     }
 
     public String getLinkImage(MediaEntryModule mediaModule){

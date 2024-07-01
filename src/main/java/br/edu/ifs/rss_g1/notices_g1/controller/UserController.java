@@ -2,6 +2,7 @@ package br.edu.ifs.rss_g1.notices_g1.controller;
 
 import br.edu.ifs.rss_g1.notices_g1.dto.UserDTO;
 import br.edu.ifs.rss_g1.notices_g1.dto.UserResponseDTO;
+import br.edu.ifs.rss_g1.notices_g1.entity.Category;
 import br.edu.ifs.rss_g1.notices_g1.entity.User;
 import br.edu.ifs.rss_g1.notices_g1.repository.UserRepository;
 import br.edu.ifs.rss_g1.notices_g1.service.UserService;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserDTO user) {
@@ -37,8 +39,6 @@ public class UserController {
                  userCreate.getCategories());
          return ResponseEntity.ok().body(userResponseDTO);
     }
-
-
 
 
 
