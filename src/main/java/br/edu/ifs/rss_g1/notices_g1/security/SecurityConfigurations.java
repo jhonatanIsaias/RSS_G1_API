@@ -1,6 +1,6 @@
 package br.edu.ifs.rss_g1.notices_g1.security;
 
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,6 @@ public class SecurityConfigurations {
                         authorize
                                 .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/user").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/notice").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/category").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
