@@ -42,6 +42,15 @@ public class TokenService {
             throw  new RuntimeException("token invalidate"+exception);
         }
 
+
+
+    }
+    public static String getSubjectFromToken(String token){
+        try {
+            return JWT.decode(token).getSubject();
+        } catch (JWTVerificationException exception) {
+            throw new RuntimeException("Invalid token: " + exception.getMessage(), exception);
+        }
     }
 
     private Instant tokenExpireTime(){

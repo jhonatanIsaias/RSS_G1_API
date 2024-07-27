@@ -18,7 +18,7 @@ import java.util.*;
 
 @Entity
 @Data
-public class User implements  UserDetails {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,12 +33,12 @@ public class User implements  UserDetails {
 
     private String login;
 
-    @Getter
+
     private String email;
 
     private int role;
 
-    @Getter
+
     private String password;
 
 
@@ -50,6 +50,7 @@ public class User implements  UserDetails {
 
     @Temporal(TemporalType.DATE)
     private Date created_at;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_category",

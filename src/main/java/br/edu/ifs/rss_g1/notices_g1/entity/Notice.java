@@ -24,7 +24,7 @@ public class Notice {
     private String title;
 
     @NotNull(message = "Description cannot be null")
-    @Column(length = 10000)
+    @Column( columnDefinition = "LONGTEXT")
     private String description;
 
     @NotNull(message = "Url image cannot be null")

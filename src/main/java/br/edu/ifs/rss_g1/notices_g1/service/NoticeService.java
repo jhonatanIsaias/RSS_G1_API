@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -61,8 +62,12 @@ public class NoticeService {
         }
     }
     @Transactional
-    public List<Notice> handlerNoticesByCategory(Long userId){
-      User optionalUser = userRepository.findById(userId).orElse(null);
+    public List<Notice> handlerNoticesByCategory(String authIdentify){
+
+        if(authIdentify != null) authIdentify = authIdentify.replace("Bearer ","");
+        String user = TokenService.getSubjectFromToken(authIdentify);
+        Long userId =  userRepository.findByLogin(user).getUserId();
+        User optionalUser = userRepository.findById(userId).orElse(null);
 
             if(optionalUser != null){
 

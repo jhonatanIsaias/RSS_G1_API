@@ -11,6 +11,7 @@ import br.edu.ifs.rss_g1.notices_g1.repository.UserRepository;
 import br.edu.ifs.rss_g1.notices_g1.service.Exceptions.UserException;
 import br.edu.ifs.rss_g1.notices_g1.utils.ParseDate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.expression.ParseException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,12 +44,16 @@ public class UserService {
 
     private User userDtoToUser(UserDTO userDTO){
         User user =  new User();
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setLogin(userDTO.getLogin());
-        user.setFone(userDTO.getFone());
+        BeanUtils.copyProperties(userDTO,user);
+       /*
+
+         user.setName(userDTO.getName());
+         user.setEmail(userDTO.getEmail());
+         user.setLogin(userDTO.getLogin());
+         user.setFone(userDTO.getFone());
+
+         user.setStatus(true);*/
         user.setRole(RoleEnum.valueOf(2));
-        user.setStatus(true);
         String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.getPassword());
         user.setPassword(encryptedPassword);
         user.setBirth_date(ParseDate.parseDate(userDTO.getBirth_date(),DATE_FORMAT));
