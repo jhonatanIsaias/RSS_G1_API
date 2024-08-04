@@ -35,14 +35,8 @@ public class AuthenticationController {
     public ResponseEntity authentication(@RequestBody @Valid AutheticationDTO data) {
 
             var userNamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-
-            System.out.println("user name password " + userNamePassword);
-
             var auth = this.authenticationManager.authenticate(userNamePassword);
-
-
             var token = tokenService.generateToken((User) auth.getPrincipal());
-
             return ResponseEntity.ok(token);
 
     }

@@ -38,6 +38,7 @@ public class NoticeService {
     protected void save(){
 
         List<Category> categories = categoryRepository.findAll();
+        
         try{
             for(Category c : categories){
                 List<SyndEntry> notices = rssFeedService.readFeed(c.getLink());

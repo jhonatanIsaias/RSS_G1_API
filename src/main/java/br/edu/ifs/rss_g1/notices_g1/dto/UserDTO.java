@@ -22,7 +22,7 @@ public class UserDTO  {
     private String name;
 
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Invalid phone number")
-    private String fone;
+    private String phone;
 
     @NotNull(message = "Name cannot not be null")
     private String login;

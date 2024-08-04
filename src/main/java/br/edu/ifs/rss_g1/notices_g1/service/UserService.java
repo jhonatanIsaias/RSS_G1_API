@@ -30,8 +30,9 @@ public class UserService {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     public User saveUser(UserDTO user){
         try{
-          UserDetails u = userRepository.findByEmail(user.getEmail());
-           if(u == null){
+          UserDetails userMail = userRepository.findByEmail(user.getEmail());
+          User userLogin = userRepository.findByLogin(user.getLogin());
+           if(userMail == null && userLogin == null){
                User userCreate = userDtoToUser(user);
                return userRepository.save(userCreate);
            }
@@ -45,14 +46,6 @@ public class UserService {
     private User userDtoToUser(UserDTO userDTO){
         User user =  new User();
         BeanUtils.copyProperties(userDTO,user);
-       /*
-
-         user.setName(userDTO.getName());
-         user.setEmail(userDTO.getEmail());
-         user.setLogin(userDTO.getLogin());
-         user.setFone(userDTO.getFone());
-
-         user.setStatus(true);*/
         user.setRole(RoleEnum.valueOf(2));
         String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.getPassword());
         user.setPassword(encryptedPassword);
@@ -62,8 +55,6 @@ public class UserService {
         return user;
 
     }
-
-
     private void setCategoriesUser(UserDTO userDTO, User user){
         if(!userDTO.getCategories().isEmpty()){
             for(Long id : userDTO.getCategories()){

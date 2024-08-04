@@ -2,7 +2,6 @@ package br.edu.ifs.rss_g1.notices_g1.controller;
 
 import br.edu.ifs.rss_g1.notices_g1.entity.Notice;
 import br.edu.ifs.rss_g1.notices_g1.service.NoticeService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

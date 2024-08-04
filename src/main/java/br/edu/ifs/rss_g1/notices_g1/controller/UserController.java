@@ -21,7 +21,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
+
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserDTO user) {
@@ -29,7 +29,7 @@ public class UserController {
          UserResponseDTO userResponseDTO = new UserResponseDTO(
                  userCreate.getUserId(),
                  userCreate.getName(),
-                 userCreate.getFone(),
+                 userCreate.getPhone(),
                  userCreate.getLogin(),
                  userCreate.getEmail(),
                  userCreate.getRole(),

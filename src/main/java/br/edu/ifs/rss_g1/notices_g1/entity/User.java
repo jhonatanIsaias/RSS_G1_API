@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private String name;
 
 
-    private String fone;
+    private String phone;
 
 
     private String login;
@@ -45,7 +45,7 @@ public class User implements UserDetails {
     @Temporal(TemporalType.DATE)
     private Date birth_date;
 
-    @NotNull(message = "Status cannot be null")
+
     private Boolean status;
 
     @Temporal(TemporalType.DATE)
@@ -78,7 +78,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return getLogin();
     }
 
     @Override
